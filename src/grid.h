@@ -3,7 +3,7 @@
 
 typedef struct Grid_s {
   float cell_size;
-  float offset;
+  Vector2 offset;
 } Grid_s;
 
 /** TODO unimplemented
