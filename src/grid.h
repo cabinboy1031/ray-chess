@@ -4,6 +4,7 @@
 typedef struct Grid_s {
   float cell_size;
   Vector2 offset;
+  Vector2 bounds;
 } Grid_s;
 
 /** TODO unimplemented

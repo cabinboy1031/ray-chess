@@ -4,13 +4,6 @@
 #include "src/player.h"
 #include "src/grid.h"
 
-Vector2 to_screen(Grid_s grid, Vector2 coord){
-  return (Vector2) {
-    (((int)coord.x) * grid.cell_size) + grid.offset.x,
-    (((int)coord.y) * grid.cell_size) + grid.offset.y
-  };
-}
-
 typedef struct Pallette_s {
   Color black;
   Color white;
@@ -50,27 +43,39 @@ int main(){
   const int screenWidth = 800;
   const int screenHeight = 800;
 
+  InitWindow(screenWidth, screenHeight, "Core example - basic window");
+  SetTargetFPS(60);
+
   Grid_s grid = {
     .cell_size = 50,
-    .offset = (Vector2){200, 200}
+    .offset = (Vector2){200, 200},
+    .bounds = (Vector2){8,8}
   };
 
   Color board[] = {RED, BLACK};
 
+  struct Piece {
+    Vector2 coord;
+  };
 
-  InitWindow(screenWidth, screenHeight, "Core example - basic window");
-  SetTargetFPS(60);
+  struct Piece piece = {(Vector2){0, 0}};
 
   while(!WindowShouldClose()){
+    bool leftMouseClick = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+    bool rightMouseClick = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
+    Vector2 mouseCoord = GetMousePosition();
+
+    if(leftMouseClick){
+      piece.coord = to_grid(grid, mouseCoord);
+    }
+
     BeginDrawing();
         ClearBackground(game.colors.ui_bg);
-
         for (int i = 0; i < 64; i++) {
           int b = 0;
           if ((i / 8) % 2 != 0) {
             b = 1;
           }
-
           Vector2 drawCoord = to_screen(grid,
                                         (Vector2){i%8, i/8});
           DrawRectangle(drawCoord.x,
@@ -79,12 +84,12 @@ int main(){
                         grid.cell_size,
                         board[(i + b) % 2]);
         }
-        Vector2 drawCoord = to_screen(grid, (Vector2){0,0});
+
+        Vector2 drawCoord = to_screen(grid, piece.coord);
         DrawCircle(drawCoord.x + grid.cell_size/2,
                   drawCoord.y + grid.cell_size / 2,
                   grid.cell_size / 2,
                   game.colors.white_piece);
-
         DrawText("Hello World!",
                  screenWidth / 2,
                  150, 20,

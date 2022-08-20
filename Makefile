@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -std=c11 -Wall -ggdb -O0 `pkg-config --cflags raylib`
-OBJS = game.c
+OBJS = game.c src/grid.o
 INCLUDE = `pkg-config --libs raylib`
 DEPS =
 OUT_FILE = chess
