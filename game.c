@@ -14,31 +14,38 @@ typedef struct Pallette_s {
 } Pallette_s;
 
 typedef struct Game_s {
-  Pallette_s colors;
   Board_s data;
+  Grid_s grid;
   Player_s *player_b;
   Player_s *player_w;
   Player_s *cur_p;
+  Pallette_s colors;
 } Game_s;
 
-Game_s* game_init(Pallette_s pallette, Player_s player_white, Player_s player_black);
+Game_s game_init(Player_s *player_white, Player_s *player_black);
 void game_restart(Game_s*);
 void game_load(Game_s*, char* filename);
 void game_end(Game_s*);
 
+Game_s game_init(Player_s *player_white, Player_s *player_black){
+  return (Game_s){.data = {0},
+                         .grid = (Grid_s){.cell_size = 50,
+                                          .offset = (Vector2){200, 200},
+                                          .bounds = (Vector2){8, 8}},
+                         .player_b = player_black,
+                         .player_w = player_white,
+                         .cur_p = 0,
+                         .colors = (Pallette_s){.black = BLACK,
+                                                .white = MAROON,
+                                                .ui_fg = VIOLET,
+                                                .ui_bg = LIGHTGRAY,
+                                                .black_piece = BLACK,
+                                                .white_piece = WHITE}};
+}
 
 int main(){
 	printf("Hello world!\n");
-  Game_s game = (Game_s){
-    .colors = (Pallette_s){
-      .black = BLACK,
-      .white = RAYWHITE,
-      .ui_fg = VIOLET,
-      .ui_bg = LIGHTGRAY,
-      .black_piece = BLACK,
-      .white_piece = WHITE
-    }
-  };
+  Game_s game = game_init(0, 0);
 
   const int screenWidth = 800;
   const int screenHeight = 800;
@@ -46,13 +53,10 @@ int main(){
   InitWindow(screenWidth, screenHeight, "Core example - basic window");
   SetTargetFPS(60);
 
-  Grid_s grid = {
-    .cell_size = 50,
-    .offset = (Vector2){200, 200},
-    .bounds = (Vector2){8,8}
+  Color board[] = {
+    game.colors.white,
+    game.colors.black
   };
-
-  Color board[] = {RED, BLACK};
 
   struct Piece {
     Vector2 coord;
@@ -65,6 +69,7 @@ int main(){
     bool rightMouseClick = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
     Vector2 mouseCoord = GetMousePosition();
 
+    Grid_s grid = game.grid;
     if(leftMouseClick){
       piece.coord = to_grid(grid, mouseCoord);
     }
