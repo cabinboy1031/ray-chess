@@ -1,2 +1,5 @@
 .ccls-cache/
 chess
+
+build/
+compile_commands.json
