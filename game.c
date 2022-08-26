@@ -1,5 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <raylib.h>
+
+#include "src/map.h"
+
 #include "src/board.h"
 #include "src/player.h"
 #include "src/grid.h"
@@ -43,15 +47,21 @@ Game_s game_init(Player_s *player_white, Player_s *player_black){
                                                 .white_piece = WHITE}};
 }
 
-int main(){
-	printf("Hello world!\n");
-  Game_s game = game_init(0, 0);
-
+void raylib_init(){
   const int screenWidth = 800;
   const int screenHeight = 800;
 
   InitWindow(screenWidth, screenHeight, "Core example - basic window");
   SetTargetFPS(60);
+}
+
+int main(){
+  raylib_init();
+  Game_s game = game_init(0, 0);
+  piece_map_t pieces;
+  map_init(&pieces);
+
+
 
   Color board[] = {
     game.colors.white,
@@ -68,7 +78,7 @@ int main(){
     bool leftMouseClick = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
     bool rightMouseClick = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
     Vector2 mouseCoord = GetMousePosition();
-
+  
     Grid_s grid = game.grid;
     if(leftMouseClick){
       piece.coord = to_grid(grid, mouseCoord);
@@ -96,7 +106,7 @@ int main(){
                   grid.cell_size / 2,
                   game.colors.white_piece);
         DrawText("Hello World!",
-                 screenWidth / 2,
+                 GetScreenWidth() / 2,
                  150, 20,
                  game.colors.ui_fg);
     EndDrawing();

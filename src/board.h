@@ -1,5 +1,7 @@
 #pragma once
 #include <raylib.h>
+#include "map.h"
+
 #include "grid.h"
 
 /**
@@ -46,9 +48,12 @@ typedef struct Board_s {
  */
 typedef struct Piece_s {
   char role;
-  char team;
-  Image *img_b;
-  Image *img_w;
+  Image img_b;
+  Image img_w;
 } Piece_s;
 
-// TODO array to map conversion, map access, and image loading functions
+typedef map_t(Piece_s*) piece_map_t;
+
+void load_piece(piece_map_t *map, char key, char* white_sprite_dir, char* black_sprite_dir);
+map_int_t load_pieces();
+void unload_pieces(piece_map_t *map);

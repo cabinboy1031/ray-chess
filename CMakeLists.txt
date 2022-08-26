@@ -8,6 +8,7 @@ include_directories(lib/raylib/src)
 
 add_executable(chess
     game.c
-    src/grid.c)
+    src/grid.c
+    src/map.c)
 
 target_link_libraries(chess raylib)
